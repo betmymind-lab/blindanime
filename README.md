@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-392489127"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-392489127');
+    </script>
+    <!-- 以上是 Google Analytics 追蹤碼 -->
+    
+    <meta charset="UTF-8">
+    <title>日本動漫隨機推薦</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="適合動畫荒使用～不包括大熱門熱血番。隨機推薦你看過的經典動畫，不再煩惱要看什麼。">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #1a1a2e;
+            font-family: system-ui, 'Segoe UI', 'Noto Sans TC', sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-container {
+            max-width: 1000px;
+            width: 100%;
+            background: #16213e;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.5);
+            overflow: hidden;
+            padding: 24px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 8px;
+            color: #eeeeee;
+            border-left: 5px solid #e94560;
+            padding-left: 20px;
+        }
+        .sub {
+            text-align: center;
+            color: #ffd369;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+        }
+        .two-columns {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+        .pick-area {
+            flex: 2;
+            min-width: 250px;
+            background: #0f3460;
+            border-radius: 28px;
+            padding: 20px;
+        }
+        .anime-result {
+            background: #1a1a2e;
+            border-radius: 28px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .result-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd369;
+            word-break: break-word;
+        }
+        .empty-message {
+            color: #adb5bd;
+            font-size: 1.2rem;
+        }
+        .btn-pick {
+            background: #e94560;
+            border: none;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 16px 24px;
+            width: 100%;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(233,69,96,0.4);
+            margin-bottom: 20px;
+        }
+        .btn-pick:hover {
+            background: #ff6b6b;
+            transform: scale(0.98);
+        }
+        .right-area {
+            flex: 1.2;
+            min-width: 220px;
+        }
+        .info-card {
+            background: #0f3460;
+            border-radius: 24px;
+            padding: 18px;
+        }
+        .info-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #ffd369;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #e94560;
+            padding-left: 12px;
+        }
+        .scroll-list {
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+        .list-item {
+            background: #1a1a2e;
+            margin: 6px 0;
+            padding: 8px 12px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #dddddd;
+            word-break: break-word;
+        }
+        .badge-count {
+            background: #e94560;
+            border-radius: 30px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+            color: white;
+        }
+        footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.75rem;
+            color: #aaaaaa;
+        }
+        .reset-link {
+            cursor: pointer;
+            margin-left: 16px;
+            text-decoration: underline;
+            color: #ffb3b3;
+        }
+        .reset-link:hover {
+            color: #ff6b6b;
+        }
+        @media (max-width: 700px) {
+            .card-container { padding: 16px; }
+            .result-name { font-size: 1.4rem; }
+            .btn-pick { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="card-container">
+    <h1>🎲 日本動畫隨機推薦</h1>
+    <div class="sub">📺 適合動畫荒使用～不包括大熱門熱血番</div>
+    <div class="two-columns">
+        <div class="pick-area">
+            <div class="anime-result" id="resultArea">
+                <div class="empty-message">✨ 按下按鈕，推薦一部動畫 ✨</div>
+            </div>
+            <button class="btn-pick" id="pickBtn"> 隨機推薦</button>
+        </div>
+
+        <div class="right-area">
+            <div class="info-card">
+                <h3>📋 已抽紀錄 <span class="badge-count" id="recordCount">0</span></h3>
+                <div class="scroll-list" id="recordList">
+                    <div class="list-item" style="opacity:0.6;">暫無紀錄</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        💡 已抽過的動畫不會再出現 
+        <span class="reset-link" id="resetBtn">🔄 重置抽選紀錄</span>
+    </footer>
+</div>
+
+<script>
+    // ========= 你的片單（訪客看不到）=========
+    const ORIGINAL_ANIME_LIST = [
+        "刻刻","異國日記","異獸魔都","正相反的你與我","現在的是哪一個多聞！？",
+        "末日後酒店","全修","村井之戀","浪漫殺手","迷宮飯","日常",
+        "WITCH WATCH 魔女守護者","安妮·雪利","三月的獅子","黃金神威","徒然喜歡你",
+        "血界戰線","男子高中生的日常","不死少女 殺人笑劇","佐賀偶像是傳奇","躍動青春",
+        "紫羅蘭永恆花園","古諾西亞","永生之酒","金牌得主","奇巧計程車","靈能百分百",
+        "魔法少女與惡曾是敵人","漂流少年","怪化貓","四疊半神話大系","蜂蜜幸運草",
+        "十二國記","月色真美","月刊少女野崎同學","境界觸發者","櫻蘭高校男公關部",
+        "PSYCHO-PASS 心靈判官","驚爆危機","妖精森林的小不點","ReLIFE","只有我不存在的城市",
+        "獵魔戰記","秘密內幕～女子警察的逆襲","不吉波普不笑","玉子市場","小城日常",
+        "禁止出入的鼴鼠","烏鴉不擇主","地。-關於地球的運動-","SSSS.DYNAZENON",
+        "平穩世代的韋駄天們","聽我的電波吧","女高中生的虛度日常","星合之空","編舟記",
+        "赤髮白雪姬","境界線上的地平線","來自新世界"
+    ];
+    // =========================================
+
+    let currentAnimeList = [];
+    let pickedHistory = [];
+
+    const resultArea = document.getElementById('resultArea');
+    const pickBtn = document.getElementById('pickBtn');
+    const recordListDiv = document.getElementById('recordList');
+    const recordCountSpan = document.getElementById('recordCount');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function saveToLocal() {
+        localStorage.setItem('anime_current', JSON.stringify(currentAnimeList));
+        localStorage.setItem('anime_history', JSON.stringify(pickedHistory));
+    }
+
+    function loadFromLocal() {
+        const savedList = localStorage.getItem('anime_current');
+        const savedHistory = localStorage.getItem('anime_history');
+        if (savedList) currentAnimeList = JSON.parse(savedList);
+        else currentAnimeList = [...ORIGINAL_ANIME_LIST];
+        if (savedHistory) pickedHistory = JSON.parse(savedHistory);
+        else pickedHistory = [];
+    }
+
+    function resetToOriginal() {
+        if (confirm("確定要重置嗎？這會清除所有「已抽紀錄」，讓你所有動畫都能再次被推薦。")) {
+            pickedHistory = [];
+            saveToLocal();
+            refreshUI();
+            resultArea.innerHTML = `<div class="empty-message">✨ 已重置！可以重新開始抽選 ✨</div>`;
+        }
+    }
+
+    function pickRandom() {
+        const notPicked = currentAnimeList.filter(anime => !pickedHistory.includes(anime));
+        if (notPicked.length === 0) {
+            resultArea.innerHTML = `<div class="empty-message">🎉 所有動畫都抽過一輪了！<br>點下方「重置抽選紀錄」就能重新開始 🎉</div>`;
+            return;
+        }
+        const randomIndex = Math.floor(Math.random() * notPicked.length);
+        const selected = notPicked[randomIndex];
+        pickedHistory.push(selected);
+        saveToLocal();
+        resultArea.innerHTML = `<div class="result-name"> ${selected}</div>`;
+        refreshUI();
+    }
+
+    function refreshUI() {
+        const recCount = pickedHistory.length;
+        recordCountSpan.innerText = recCount;
+        if (recCount === 0) {
+            recordListDiv.innerHTML = `<div class="list-item" style="opacity:0.6;">📭 尚未抽過任何動畫</div>`;
+        } else {
+            let html = '';
+            pickedHistory.forEach((name, idx) => {
+                html += `<div class="list-item">${idx+1}. ${name}</div>`;
+            });
+            recordListDiv.innerHTML = html;
+        }
+    }
+
+    function init() {
+        loadFromLocal();
+        refreshUI();
+        resultArea.innerHTML = `<div class="empty-message">✨ 按下按鈕，推薦一部動畫 ✨</div>`;
+    }
+
+    pickBtn.addEventListener('click', pickRandom);
+    resetBtn.addEventListener('click', resetToOriginal);
+
+    init();
+</script>
+</body>
+</html>
